@@ -1,8 +1,9 @@
 import { create } from "zustand";
 import { User } from "../../../domain/entities/user";
 import { AuthStatus } from "../../../infraestructure/interface/auth.status";
-import { autLogin, authCheckStatus } from "../../../actions/auth/auth";
+
 import { StorageAdapter } from "../../../config/adapters/storage-adapter";
+import { autLogin, authCheckStatus } from "../../../actions/auth/auth";
 
 export interface AuthState {
   status: AuthStatus;
@@ -10,12 +11,13 @@ export interface AuthState {
   token?: string;
   login: (email: string, password: string) => Promise<boolean>;
   checkStatus: () => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 //Definir el store
 export const useAuthStore = create<AuthState>()((set, get) => ({
   //Voy a ir cambiando el estado de autenticación
-  status: "checking",
+  status: 'checking',
   user: undefined,
   token: undefined,
   login: async (email: string, password: string) => {
@@ -44,4 +46,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     await StorageAdapter.setItem("token", resp.token);
     set({ status: "authenticated", token: resp.token, user: resp.user });
   },
+  logout: async()=>{
+    //Remove token del storage
+    await StorageAdapter.removeItem('token');
+    set({status:'unauthenticated', token: undefined, user: undefined})
+  }
 }));

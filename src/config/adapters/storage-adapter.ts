@@ -21,4 +21,12 @@ export class StorageAdapter {
       throw new Error(`Error setting item ${key} - ${value}`);
     }
   }
+
+  static async removeItem(key: string) {
+    try {
+      await AsyncStorage.removeItem(key);
+    } catch (ex) {
+      throw new Error(`Error remove item ${key}`);
+    }
+  }
 }

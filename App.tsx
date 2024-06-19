@@ -12,6 +12,9 @@ import * as eva from "@eva-design/eva";
 import { useColorScheme } from "react-native";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { AuthProvider } from "./src/presentation/providers/AuthProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const App = () => {
   /*Para indicarle a mi aplicativo que se debe adaptar al tema del dispositivo sea light o dark
@@ -21,14 +24,16 @@ const App = () => {
 
   return (
     <>
-      <IconRegistry icons={EvaIconsPack} />
-      <ApplicationProvider {...eva} theme={theme}>
-        <NavigationContainer>
-          <AuthProvider>
-            <StackNavigator />
-          </AuthProvider>
-        </NavigationContainer>
-      </ApplicationProvider>
+      <QueryClientProvider client={queryClient}>
+        <IconRegistry icons={EvaIconsPack} />
+        <ApplicationProvider {...eva} theme={theme}>
+          <NavigationContainer>
+            <AuthProvider>
+              <StackNavigator />
+            </AuthProvider>
+          </NavigationContainer>
+        </ApplicationProvider>
+      </QueryClientProvider>
     </>
   );
 };
